@@ -1,0 +1,18 @@
+{% assign onepieces = product.metafields.AcquaACF.one_pieces | split: '|' %}
+
+{% if onepieces.size > 0 %}
+  <div class="tops-and-bottoms-wrap dots-container">
+    <div class="swiper-container acqua-tb-products">
+      <div class="swiper-wrapper">
+        {% for acq_product in onepieces %}
+          <div class="swiper-slide">
+            {% include 'product-shop-item' %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="swiper-bubble swiper-button-prev"></div>
+    <div class="swiper-bubble swiper-button-next"></div>
+  </div>
+{% endif %}

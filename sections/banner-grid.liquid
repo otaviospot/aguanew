@@ -1,0 +1,489 @@
+<section class="home-banner-grid one">
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <ul class="banner-ul">
+          {% for block in section.blocks %}
+            <li class="banner-li">
+              <div class="banner-block">
+                <a href="{{ block.settings.banner_url }}" class="banner-img">
+                  {%- if block.settings.banner_img -%}
+                    {{
+                      block.settings.banner_img
+                      | image_url: width: 1024
+                      | image_tag:
+                        loading: 'lazy',
+                        width: block.settings.banner_img.width,
+                        height: block.settings.banner_img.height,
+                        class: 'img-fluid',
+                        alt: block.settings.banner_img.alt
+                      | escape
+                    }}
+                  {%- else -%}
+                    {%- capture placeholder -%}collection-{% cycle 1, 2, 3, 4, 5, 6 %}{%- endcapture -%}
+                    {{ placeholder | placeholder_svg_tag: 'placeholder-svg' }}
+                  {%- endif -%}
+                  <div class="banner-content {% if block.settings.banner_content_position == "right" %} banner-content-right{% elsif block.settings.banner_content_position == "left" %} banner-content-left{% else %} banner-content-center{% endif %}{% if block.settings.banner_text_position == "right" %} banner-text-right{% elsif block.settings.banner_text_position == "left" %} banner-text-left{% else %} banner-text-center{% endif %}">
+                    {% if block.settings.banner_subtitle != '' %}
+                      <span class="subtitle" style="color: {{ block.settings.banner_subtitle_color }};">
+                        {{- block.settings.banner_subtitle -}}
+                      </span>
+                    {% endif %}
+                    {% if block.settings.banner_title != '' %}
+                      <h2 class="title" style="color: {{ block.settings.banner_title_color }};">
+                        {{ block.settings.banner_title }}
+                      </h2>
+                    {% endif %}
+                    {% if block.settings.banner_btn_text != '' %}
+                      <span class="banner-btn btn {% if block.settings.banner_btn_style == 'btn-style1' %}btn-style{% elsif block.settings.banner_btn_style == 'btn-style2' %}btn-style2{% else %}btn-style3{% endif %}">
+                        {{- block.settings.banner_btn_text -}}
+                      </span>
+                    {% endif %}
+                  </div>
+                </a>
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  addEventListener('DOMContentLoaded', (event) => {
+    if(document.getElementById('deal_banner_days')){
+      const second = 1000,
+      minute = second * 60,
+      hour = minute * 60,
+      day = hour * 24;
+      let countDown = new Date('{{ section.settings.deal_banner_month }} {{ section.settings.deal_banner_date }}, {{ section.settings.deal_banner_year }} 00:00:00').getTime(),
+      x = setInterval(function() {
+        let now = new Date().getTime(),
+        distance = countDown - now;
+        document.getElementById('deal_banner_days').innerText = Math.floor(distance / (day)),
+        document.getElementById('deal_banner_hours').innerText = Math.floor((distance % (day)) / (hour)),
+        document.getElementById('deal_banner_minutes').innerText = Math.floor((distance % (hour)) / (minute)),
+        document.getElementById('deal_banner_seconds').innerText = Math.floor((distance % (minute)) / second);
+      }, second)
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Banner Grid",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Padding"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "label": "Section Padding Top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "label": "Section Padding Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "paragraph",
+      "content": "Ipad Pro / Ipad"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top_ip",
+      "label": "Section Padding Top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom_ip",
+      "label": "Section Padding Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "paragraph",
+      "content": "Mobile"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top_xs",
+      "label": "Section Padding Top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom_xs",
+      "label": "Section Padding Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    }
+  ],
+  "blocks": [
+    {
+      "type": "banner_grid2",
+      "name": "Banner Item",
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Banner Image"
+        },
+        {
+          "type": "image_picker",
+          "id": "banner_img",
+          "label": "Banner Image",
+          "info": "Recommended Size: 740x505px"
+        },
+        {
+          "type": "paragraph",
+          "content": "Banner Content"
+        },
+        {
+          "type": "text",
+          "id": "banner_subtitle",
+          "label": "Banner Subtitle",
+          "default": "Fast & effective"
+        },
+        {
+          "type": "color",
+          "id": "banner_subtitle_color",
+          "label": "Banner Subtitle Color",
+          "default": "#808080"
+        },
+        {
+          "type": "text",
+          "id": "banner_title",
+          "label": "Banner Title",
+          "default": "Compressor nebulizers"
+        },
+        {
+          "type": "color",
+          "id": "banner_title_color",
+          "label": "Banner Title Color",
+          "default": "#333333"
+        },
+        {
+          "type": "text",
+          "id": "banner_btn_text",
+          "label": "Button Text",
+          "default": "Shop now"
+        },
+        {
+          "type": "url",
+          "id": "banner_url",
+          "label": "Banner url"
+        },
+        {
+          "type": "select",
+          "id": "banner_btn_style",
+          "label": "Button Style",
+          "options": [
+            {
+              "label": "Button Style1",
+              "value": "btn-style1"
+            },
+            {
+              "label": "Button Style2",
+              "value": "btn-style2"
+            },
+            {
+              "label": "Button Style3",
+              "value": "btn-style3"
+            }
+          ],
+          "default": "btn-style1"
+        },
+        {
+          "type": "header",
+          "content": "Banner Content Position"
+        },
+        {
+          "type": "select",
+          "id": "banner_content_position",
+          "label": "Content Position",
+          "options": [
+            {
+              "label": "left",
+              "value": "left"
+            },
+            {
+              "label": "Right",
+              "value": "right"
+            },
+            {
+              "label": "Center",
+              "value": "center"
+            }
+          ],
+          "default": "left"
+        },
+        {
+          "type": "header",
+          "content": "Banner Text Position"
+        },
+        {
+          "type": "select",
+          "id": "banner_text_position",
+          "label": "Text Position",
+          "options": [
+            {
+              "label": "left",
+              "value": "left"
+            },
+            {
+              "label": "Right",
+              "value": "right"
+            },
+            {
+              "label": "Center",
+              "value": "center"
+            }
+          ],
+          "default": "left"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Banner Grid"
+    }
+  ]
+}
+{% endschema %}
+<style>
+  .home-banner-grid {
+    padding-top: {{ section.settings.section_padding_top }}px;
+    padding-bottom: {{ section.settings.section_padding_bottom }}px;
+  }
+  @media(max-width: 1199px) {
+    .home-banner-grid {
+      padding-top: {{ section.settings.section_padding_top_ip }}px;
+      padding-bottom: {{ section.settings.section_padding_bottom_ip }}px;
+    }
+  }
+  @media(max-width: 767px) {
+    .home-banner-grid {
+      padding-top: {{ section.settings.section_padding_top_xs }}px;
+      padding-bottom: {{ section.settings.section_padding_bottom_xs }}px;
+    }
+  }
+
+  /*=====================================
+      banner css
+  ======================================*/
+  /* main css */
+  .home-banner-grid ul.banner-ul {
+    position: relative;
+    display: -ms-flexbox;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: center;
+    gap:20px;
+    box-sizing: border-box;
+    padding: 20px;
+  }
+  .home-banner-grid.one ul.banner-ul li.banner-li {
+    flex: 1 1 calc(25% - 15px);
+    background: black;
+  }
+  @media (max-width: 991px) {
+    .home-banner-grid ul.banner-ul {
+      flex-wrap: wrap;
+      padding: 0 !important;
+      {%- if settings.enable_rtl -%}
+      margin: -30px 0px 0px 0px;
+      {%- else -%}
+      margin: -30px 0px 0px 0px;
+      {%- endif -%}
+    }
+    .home-banner-grid ul.banner-ul li.banner-li {
+      flex: 0 0 calc(50% - 15px) !important;
+      width: calc(50% - 15px) !important;
+      margin: 0 !important;
+    }
+  }
+
+  /* banner content css */
+  .home-banner-grid ul.banner-ul li.banner-li .banner-block a.banner-img {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--sti-border-radius);
+  }
+
+
+  .home-banner-grid.one ul.banner-ul li.banner-li .banner-block a.banner-img img {
+    opacity: .5;
+    transition: all .5s;
+    {%- if settings.enable_rtl -%}
+    transform: scaleX(-1);
+    {%- endif -%}
+  }
+
+  .home-banner-grid ul.banner-ul li.banner-li:hover .banner-block a.banner-img svg {
+    width: 100%;
+  }
+
+  .home-banner-grid.one ul.banner-ul li.banner-li:hover a.banner-img img {
+    opacity: .8;
+  }
+
+  .home-banner-grid ul.banner-ul li.banner-li .banner-block a.banner-img .banner-content {
+    position: absolute;
+    width: auto;
+    z-index: 2;
+    text-align: center;
+  }
+  @media (max-width: 479px) {
+    .home-banner-grid ul.banner-ul li.banner-li .banner-block a.banner-img .banner-content {
+      width: 50%;
+    }
+  }
+  /* banner content position */
+  .home-banner-grid ul.banner-ul li.banner-li .banner-block a.banner-img .banner-content.banner-content-left {
+    {%- if settings.enable_rtl -%}
+    right: 50px;
+    {%- else -%}
+    //left: 50px;
+    {%- endif -%}
+  }
+  .home-banner-grid ul.banner-ul li.banner-li .banner-block a.banner-img .banner-content.banner-content-right {
+    {%- if settings.enable_rtl -%}
+    left: 50px;
+    {%- else -%}
+    //right: 50px;
+    {%- endif -%}
+  }
+  .home-banner-grid ul.banner-ul li.banner-li .banner-block a.banner-img .banner-content.banner-content-center {
+    left: 30px;
+    right: 30px;
+  }
+  @media (max-width: 1199px) {
+    .home-banner-grid ul.banner-ul li.banner-li .banner-block a.banner-img .banner-content.banner-content-left {
+      {%- if settings.enable_rtl -%}
+      right: 30px;
+      {%- else -%}
+      left: 30px;
+      {%- endif -%}
+    }
+    .home-banner-grid ul.banner-ul li.banner-li .banner-block a.banner-img .banner-content.banner-content-right {
+      {%- if settings.enable_rtl -%}
+      left: 30px;
+      {%- else -%}
+      right: 30px;
+      {%- endif -%}
+    }
+  }
+  @media (max-width: 767px) {
+    .home-banner-grid ul.banner-ul li.banner-li .banner-block a.banner-img .banner-content.banner-content-left {
+      {%- if settings.enable_rtl -%}
+      right: 15px;
+      {%- else -%}
+      left: 15px;
+      {%- endif -%}
+    }
+    .home-banner-grid ul.banner-ul li.banner-li .banner-block a.banner-img .banner-content.banner-content-right {
+      {%- if settings.enable_rtl -%}
+      left: 15px;
+      {%- else -%}
+      right: 15px;
+      {%- endif -%}
+    }
+    .home-banner-grid ul.banner-ul li.banner-li .banner-block a.banner-img .banner-content.banner-content-center {
+      left: 15px;
+      right: 15px;
+    }
+  }
+  /* banner text position */
+  .home-banner-grid ul.banner-ul li.banner-li .banner-block a.banner-img .banner-content.banner-text-left {
+    text-align: center;
+
+  }
+  .home-banner-grid ul.banner-ul li.banner-li .banner-block a.banner-img .banner-content.banner-text-right {
+    {%- if settings.enable_rtl -%}
+    text-align: left;
+    {%- else -%}
+    text-align: right;
+    {%- endif -%}
+  }
+  .home-banner-grid ul.banner-ul li.banner-li .banner-block a.banner-img .banner-content.banner-text-center {
+    text-align: center;
+  }
+  /* banner text css */
+  .home-banner-grid ul.banner-ul li.banner-li .banner-block a.banner-img .banner-content span.subtitle {
+    margin-bottom: 18px;
+  }
+  .home-banner-grid ul.banner-ul li.banner-li .banner-block a.banner-img .banner-content h2.title {
+    font-size: 20px;
+    text-transform: uppercase;
+    font-weight: var(--font-custom-weight-section-header);
+    line-height: 1.1;
+  }
+  .home-banner-grid ul.banner-ul li.banner-li .banner-block a.banner-img .banner-content span.banner-btn {
+    margin-top: 55px;
+  }
+  @media (max-width: 1399px) {
+    .home-banner-grid ul.banner-ul li.banner-li .banner-block a.banner-img .banner-content h2.title {
+      font-size: 30px;
+    }
+  }
+  @media (max-width: 1199px) {
+    .home-banner-grid ul.banner-ul li.banner-li .banner-block a.banner-img .banner-content span.subtitle {
+      margin-bottom: 21px;
+    }
+    .home-banner-grid ul.banner-ul li.banner-li .banner-block a.banner-img .banner-content span.banner-btn {
+      margin-top: 46px;
+    }
+  }
+  @media (max-width: 479px) {
+    .home-banner-grid ul.banner-ul li.banner-li .banner-block a.banner-img .banner-content span.subtitle {
+      margin-bottom: 22px;
+    }
+    .home-banner-grid ul.banner-ul li.banner-li .banner-block a.banner-img .banner-content h2.title {
+      font-size: 18px;
+    }
+    .home-banner-grid ul.banner-ul li.banner-li .banner-block a.banner-img .banner-content span.banner-btn {
+      margin-top: 26px;
+    }
+  }
+  @media (max-width: 320px) {
+    .home-banner-grid ul.banner-ul li.banner-li .banner-block a.banner-img .banner-content span.subtitle {
+      margin-bottom: 12px;
+    }
+    .home-banner-grid ul.banner-ul li.banner-li .banner-block a.banner-img .banner-content span.banner-btn {
+      margin-top: 16px;
+    }
+  }
+</style>

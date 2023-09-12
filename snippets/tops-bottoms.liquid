@@ -1,0 +1,79 @@
+{% assign tops = product.metafields.AcquaACF.tops | split: '|' %}
+{% assign bottoms = product.metafields.AcquaACF.bottoms | split: '|' %}
+
+{% if tops.size > 0 %}
+  {% assign tb_product_type = 'top' %}
+
+  <div class="acqua-top-product">
+    <h4>Select Your Top Color and Size</h4>
+    <div class="top-product">
+      {% for tb_product in tops %}
+        {% include 'product-shop-item' %}
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}
+
+{% if bottoms.size > 0 %}
+  {% assign tb_product_type = 'bottom' %}
+
+  <div class="acqua-bottom-products">
+    <h4>Choose Your Bottom</h4>
+    <div class="list-bottom-products">
+      {% for tb_product in bottoms %}
+        {% include 'product-shop-item-bottom' %}
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}
+<div class="add-to-cart-with-wishlist">
+  <!-- Swym button on product pages -->
+  <div class="swym-wishlist-button-bar"></div>
+  <!-- Swym button on product pages -->
+
+  <div class="global-add-to-cart">
+    <button type="button" class="default-cart-button__button disabled" disabled="disabled">
+      <span> Select all the options above </span>
+    </button>
+  </div>
+</div>
+
+<style>
+    .add-to-cart-with-wishlist{
+      display: flex;
+      align-items: start;
+      justify-content:start;
+    }
+
+  .global-add-to-cart{
+      width: 100% !important;
+  }
+
+   .global-add-to-cart button{
+      width: 100% !important;
+     padding: 20px;
+  }
+  .swym-wishlist-button-bar{
+    width: 20% !important;
+    z-index: 999;
+    display: none;
+
+  }
+    .swym-fave-count{
+    display: none;
+  }
+
+   .acqua-top-product {
+      margin-top: 20px;
+    }
+
+  .acqua-top-product h4,
+  .acqua-bottom-products h4 {
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+    .acqua-bottom-products h4 {
+      margin-top: 20px;
+    }
+</style>

@@ -1,0 +1,448 @@
+<section class="slider-category">
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        {% if section.settings.section_title != '' %}
+        <div class="section-capture">
+          <div class="section-title">
+            <h2>{{ section.settings.section_title }}</h2>
+          </div>
+          <div class="swiper-buttons">
+            <button class="swiper-prev swiper-prev-{{ section.id }}"><i class="feather-arrow-left"></i></button>
+            <button class="swiper-next swiper-next-{{ section.id }}"><i class="feather-arrow-right"></i></button>
+          </div>
+        </div>
+        {% endif %}
+        <div class="cat-slider swiper" id="category-slider-{{ section.id }}">
+          <div class="swiper-wrapper">
+            {% for block in section.blocks %}
+            {% assign category_product = collections[block.settings.slider_category_handle] %}
+            <div class="swiper-slide">
+              <div class="category-wrap">
+                <div class="category-block">
+                  <div class="category-image">
+                    <a href="{{ category_product.url }}" class="image-block">
+                      <span class="image image-1">
+                        {%- if block.settings.category_image_1 -%}  
+                        {{ block.settings.category_image_1 | image_url: width: 1024 | image_tag:
+                          loading: 'lazy',
+                          width: block.settings.category_image_1.width,
+                          height: block.settings.category_image_1.height,
+                          class: "img-fluid",
+                          alt: block.settings.category_image_1.alt | escape }} 
+                        {%- else -%}
+                        {%- capture placeholder -%}collection-{% cycle 1, 2, 3, 4, 5, 6 %}{%- endcapture -%}
+                        {{ placeholder | placeholder_svg_tag: 'placeholder-svg mobile-img' }}
+                        {%- endif -%}
+                      </span>
+
+                      <span class="image image-2">
+                        {%- if block.settings.category_image_2 -%}  
+                        {{ block.settings.category_image_2 | image_url: width: 1024 | image_tag:
+                          loading: 'lazy',
+                          width: block.settings.category_image_2.width,
+                          height: block.settings.category_image_2.height,
+                          class: "img-fluid",
+                          alt: block.settings.category_image_2.alt | escape }} 
+                        {%- else -%}
+                        {%- capture placeholder -%}collection-{% cycle 1, 2, 3, 4, 5, 6 %}{%- endcapture -%}
+                        {{ placeholder | placeholder_svg_tag: 'placeholder-svg mobile-img' }}
+                        {%- endif -%}
+                      </span>
+                    </a>
+                  </div>
+                  <div class="category-content">
+                    <a href="{{ category_product.url }}" class="category-title">{{ category_product.title | default: "Category" }}</a>
+                    <div class="category-item">
+                      <span class="count">{{ category_product.products.count | default: "0" }}</span>
+                      {% if category_product.products.count == 0 or category_product.products.count == 1 %}
+                      <span class="item">{{ section.settings.item_label }}</span>
+                      {%- else -%}
+                      <span class="item">{{ section.settings.items_label }}</span>
+                      {% endif %}           
+                    </div>     
+                  </div>
+                </div>
+                {% if section.settings.category_btn_text != '' %}
+                <div class="category-button">
+                  <a href="{{ category_product.url }}" class="cat-button">{{ section.settings.category_btn_text }}</a>  
+                </div>
+                {% endif %}
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="swiper-buttons mobile">
+          <button class="swiper-prev swiper-prev-{{ section.id }}"><i class="feather-arrow-left"></i></button>
+          <button class="swiper-next swiper-next-{{ section.id }}"><i class="feather-arrow-right"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<script type="text/javascript">
+addEventListener('DOMContentLoaded', (event) => {
+  var swiper = new Swiper('.swiper#category-slider-{{ section.id }}', {
+    slidesPerView: 5,
+    spaceBetween: 30,
+    observer: true,
+    observeParents: true,
+    watchSlidesProgress: true,
+    loop: true,
+    {%- if settings.enable_rtl -%}
+    rtl: true,
+    {%- endif -%}
+    navigation: {
+      nextEl: '.swiper-next-{{ section.id }}',
+      prevEl: '.swiper-prev-{{ section.id }}',
+    },
+    autoplay: {
+      delay: 5000,
+      disableOnInteraction: false,
+      pauseOnMouseEnter: true
+    },
+    breakpoints: {
+      0: {
+        slidesPerView: 1,
+        spaceBetween: 12
+      },
+      320: {
+        slidesPerView: 1,
+        spaceBetween: 12
+      },
+      360: {
+        slidesPerView: 1,
+        spaceBetween: 12
+      },
+      540: {
+        slidesPerView: 2,
+        spaceBetween: 12
+      },
+      640: {
+        slidesPerView: 3,
+        spaceBetween: 12
+      },
+      768: {
+        slidesPerView: 3,
+        spaceBetween: 30
+      },
+      1024: {
+        slidesPerView: 4,
+        spaceBetween: 30
+      },
+      1199: {
+        slidesPerView: 4,
+        spaceBetween: 30
+      },
+      1299: {
+        slidesPerView: 4,
+        spaceBetween: 30
+      },
+      1399: {
+        slidesPerView: 5,
+        spaceBetween: 30
+      },
+      1599: {
+        slidesPerView: 5,
+        spaceBetween: 30
+      }
+    }
+  });
+});
+</script>
+{% schema %}
+{
+  "name": "Category",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Padding"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "label": "Section Padding Top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "label": "Section Padding Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "paragraph",
+      "content": "tablet"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top_lg",
+      "label": "Section Padding Top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom_lg",
+      "label": "Section Padding Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "paragraph",
+      "content": "Mobile"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top_xs",
+      "label": "Section Padding Top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom_xs",
+      "label": "Section Padding Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Section Background Color"
+    },
+    {
+      "type": "color",
+      "id": "section_bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Section Title"
+    },
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Title",
+      "default": "Medical category"
+    },
+    {
+      "type": "header",
+      "content": "Category Item Label"
+    },
+    {
+      "type": "text",
+      "id": "item_label",
+      "label": "Item Label",
+      "default": "Item"
+    },
+    {
+      "type": "text",
+      "id": "items_label",
+      "label": "Items Label",
+      "default": "Items"
+    },
+    {
+      "type": "header",
+      "content": "Category Button Text"
+    },
+    {
+      "type": "text",
+      "id": "category_btn_text",
+      "label": "Button Text",
+      "default": "Shop now"
+    }
+  ],
+  "blocks": [
+    {
+      "name": "slider-category",
+      "type": "product_tab",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Select Your Collection"
+        },
+        {
+          "type": "collection",
+          "id": "slider_category_handle",
+          "label": "Collection"
+        },
+        {
+          "type": "header",
+          "content": "Category Image"
+        },
+        {
+          "type": "image_picker",
+          "id": "category_image_1",
+          "label": "Image 1",
+          "info": "Recommended Size: 512px x 512px"
+        },
+        {
+          "type": "image_picker",
+          "id": "category_image_2",
+          "label": "Image 2",
+          "info": "Recommended Size: 512px x 512px"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Category"
+    }
+  ]
+}
+{% endschema %}
+<style>
+.slider-category {
+  padding-top:{{ section.settings.section_padding_top }}px;
+  padding-bottom:{{ section.settings.section_padding_bottom }}px;
+  background-color: {{ section.settings.section_bg_color }};
+}
+@media (max-width: 1199px) {
+  .slider-category {
+    padding-top:{{ section.settings.section_padding_top_lg }}px;
+    padding-bottom:{{ section.settings.section_padding_bottom_lg }}px;
+  }
+}
+@media (max-width: 767px) {
+  .slider-category {
+    padding-top:{{ section.settings.section_padding_top_xs }}px;
+    padding-bottom:{{ section.settings.section_padding_bottom_xs }}px;
+  }
+}
+
+/* category title and swiper button css */
+.slider-category .section-capture {
+  display: flex;  
+  align-items: center;
+  justify-content: space-between;
+}
+.slider-category .section-capture .swiper-buttons {
+  margin-top: 0px;
+}
+@media (max-width: 479px) {
+  .slider-category .section-capture {
+    flex-direction: column;
+  }
+  .slider-category .section-capture .swiper-buttons {
+    display: none;
+  }
+}
+
+/* category css */
+.slider-category .category-wrap {
+  background-color: var(--extra-color-body);
+  text-align: center;
+  border-radius: var(--sti-border-radius);
+  overflow: hidden;
+}
+.slider-category .category-wrap .category-block {
+  padding: 30px;
+}
+.slider-category .category-wrap .category-block .category-image a.image-block {
+  position: relative;
+  background-color: #FFFFFF;
+  width: 100px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  border-radius: 100%;
+}
+.slider-category .category-wrap:hover .category-block .category-image a.image-block {
+  background-color: var(--font-color-primary);
+}
+.slider-category .category-wrap .category-block .category-image a.image-block span.image img {
+  width: 40px;
+}
+.slider-category .category-wrap .category-block .category-image a.image-block span.image svg {
+  width: 40px;
+  height: 40px;
+}
+.slider-category .category-wrap:hover .category-block .category-image a.image-block span.image-1 {
+  -webkit-transition: opacity .3s ease-in-out, visibility .3s ease-in-out;
+  -o-transition: opacity .3s ease-in-out, visibility .3s ease-in-out;
+  transition: opacity .3s ease-in-out, visibility .3s ease-in-out;
+}
+.slider-category .category-wrap:hover .category-block .category-image a.image-block span.image-1 {
+  opacity: 0;
+  visibility: hidden;
+}
+.slider-category .category-wrap .category-block .category-image a.image-block span.image-2 {
+  position: absolute;
+  bottom: 50%;
+  transform: translateY(50%);
+  left: 0px;
+  right: 0px;
+  margin: 0 auto;
+  opacity: 0;
+  visibility: hidden;
+  -webkit-transition: opacity .3s ease-in-out, visibility .3s ease-in-out;
+  -o-transition: opacity .3s ease-in-out, visibility .3s ease-in-out;
+  transition: opacity .3s ease-in-out, visibility .3s ease-in-out;
+}
+.slider-category .category-wrap:hover .category-block .category-image a.image-block span.image-2 {
+  opacity: 1;
+  visibility: visible;
+}
+.slider-category .category-wrap .category-block .category-content {
+  margin-top: 25px;
+}
+.slider-category .category-wrap .category-block .category-content a.category-title {
+  font-size: 18px;
+  font-weight: var(--sti-font-weight);
+}
+.slider-category .category-wrap .category-block .category-content .category-item {
+  margin-top: 7px;
+}
+.slider-category .category-wrap .category-block .category-content .category-item span {
+  color: var(--font-color-paragraph);
+}
+.slider-category .category-wrap .category-button a.cat-button {
+  background-color: transparent;
+  color: var(--font-color-paragraph);
+  padding: 14px 15px;
+  width: 100%;
+  font-weight: var(--sti-font-weight);
+  text-transform: uppercase;
+  border-top: 1px dashed var(--theme-border-color);
+}
+.slider-category .category-wrap:hover .category-button a.cat-button {
+  background-color: var(--font-color-primary);
+  color: #FFFFFF;
+  border-color: var(--font-color-primary);
+}
+
+/* mobile slider button css */
+.slider-category .swiper-buttons.mobile {
+  display: none;
+}
+@media (max-width: 479px) {
+  .slider-category .swiper-buttons.mobile {
+    display: flex;
+  }
+}
+</style>

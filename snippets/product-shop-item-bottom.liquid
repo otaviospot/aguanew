@@ -1,0 +1,308 @@
+{% assign acqua_product = all_products[tb_product] %}
+{% assign current_variant = acqua_product.selected_or_first_available_variant %}
+{%- assign img_url = acqua_product.featured_image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+
+<div class="box-product item-bottom-prod">
+  <div class="image">
+    <div
+      class="featured {% if acqua_product.images.size == 1 %}full-width{% endif %}"
+      id="ProductPhoto-{{ acqua_product.id }}"
+      data-ProductPhoto
+    >
+      {%- assign image = current_variant.featured_image | default: acqua_product.featured_image -%}
+      {%- assign image_width = image.width | append: 'x' -%}
+      {%- assign image_highresolution = image | img_url: image_width -%}
+      <div
+        class="featured-container featured-container-{{ product.id }}"
+        data-lightbox="{{ section.settings.product_featured_lightbox_enable }}"
+      >
+        <a href="{{ image_highresolution }}" class="card__image-container">
+          {% assign image_widths = '85,100,200,295,394,590,720,800' %}
+          {% include 'theme-rias' %}
+          <div class="productimage-limit" style="max-width:{{ image.width }}px">
+            <img
+              id="ProductImage-{{ acqua_product.id }}"
+              loading="lazy"
+              src="{{ image | img_url: '394x' }}"
+              data-ProductImage
+              data-id="{{ acqua_product.id }}"
+              data-src="{{ image_url_pattern }}"
+              data-widths="[{{ image_widths }}]"
+              data-aspectratio="{{ image.aspect_ratio }}"
+              data-sizes="auto"
+              data-position="{{ image.position | minus: 1 }}"
+              data-max-width="{{ image.width }}"
+              alt="{{ image.alt | escape }}"
+            >
+            <noscript>
+              <img src="{{ image | img_url: '590x' }}" alt="{{ image.alt | escape }}">
+            </noscript>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    {% unless product.images.size == 1 %}
+      <div class="thumbnails acqua-pro-thumb" id="dews" style="display: none;">
+        <ul id="ProductThumbs-{{ acqua_product.id }}" data-ProductThumbs class="acqua-ins-f">
+          {% for image in acqua_product.images %}
+            {%- assign image_width = image.width | append: 'x' -%}
+            {%- assign image_highresolution = image | img_url: image_width -%}
+            {%- assign active_image = current_variant.featured_image | default: acqua_product.featured_image -%}
+            <li>
+              <a
+                href="{{ image_highresolution }}"
+                class="acqua_product-single__thumbnail {% if image == active_image %}active{% endif %}"
+                data-image-id="{{ image.id }}"
+              >
+                {% assign image_widths = '85,100,200,295,394,590,720,800' %}
+                {% include 'theme-rias' %}
+                <img
+                  loading="lazy"
+                  src="{{ image | img_url: '100x' }}"
+                  data-default="{{ image | img_url: '394x' }}"
+                  data-src="{{ image_url_pattern }}"
+                  data-src-pattern="{{ image_url_pattern }}"
+                  data-widths="[{{ image_widths }}]"
+                  data-aspectratio="{{ image.aspect_ratio }}"
+                  data-sizes="auto"
+                  data-position="{{ forloop.index0 }}"
+                  data-max-width="{{ image.width }}"
+                  alt="{{ image.alt | escape }}"
+                >
+                <noscript>
+                  <img src="{{ image | img_url: '100x' }}" alt="{{ image.alt | escape }}" class="img-re-de">
+                </noscript>
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endunless %}
+  </div>
+
+  <div class="data">
+    <div class="product-title">
+      <h3 itemprop="name">
+        {% unless section_onboarding %}
+          {{ acqua_product.title }}
+        {% else %}
+
+        {% endunless %}
+      </h3>
+
+      {% if section.settings.show_vendors %}
+        <span class="vendor">
+          {% unless section_onboarding %}
+            {{ acqua_product.vendor | link_to_vendor }}
+          {% else %}
+
+          {% endunless %}
+        </span>
+      {% endif %}
+    </div>
+
+    <div class="purchase-box">
+      <div class="selection-wrapper price product-single__price-{{ acqua_product.id }}">
+        {% unless section_onboarding %}
+          <span
+            class="money"
+            id="ProductPrice-{{ acqua_product.id }}"
+            data-ProductPrice
+            itemprop="price"
+            content="{{ current_variant.price | money_without_currency | remove: ',' }}"
+          >
+            {{- current_variant.price | money -}}
+          </span>
+        {% else %}
+          <span
+            class="money"
+            id="ProductPrice-{{ acqua_product.id }}"
+            data-ProductPrice
+            itemprop="price"
+            content="{{ 1999 | money_without_currency | remove: ',' }}"
+          >
+            {{- 1999 | money -}}
+          </span>
+        {% endunless %}
+
+        {% if current_variant.compare_at_price > current_variant.price %}
+          <p id="ComparePrice-{{ acqua_product.id }}" data-ComparePrice style="display:block;">
+            {% comment %}  {{ 'products.product.compare' | t }} {% endcomment %}
+            <span class="money" style="text-decoration:line-through; color:red;">
+              {{- current_variant.compare_at_price | money -}}
+            </span>
+          </p>
+        {% else %}
+          <p id="ComparePrice-{{ acqua_product.id }}" data-ComparePrice style="display:none;">
+            {% comment %}  {{ 'products.product.compare' | t }} {% endcomment %}
+            <span class="money" style="text-decoration:line-through color:red;">
+              {{- current_variant.compare_at_price | money -}}
+            </span>
+          </p>
+        {% endif %}
+      </div>
+
+      <div
+        id="AddToCartForm-{{ acqua_product.id }}"
+        data-AddToCartForm
+        class="form-vertical product-form product-form-{{ acqua_product.id }}"
+        data-section="{{ acqua_product.id }}"
+      >
+        {% form 'product', acqua_product %}
+          {% include 'product-customizer' %}
+
+          {%- comment -%}
+            Quantity Seletor
+          {%- endcomment -%}
+
+          {%- capture quantity_selector -%}
+                      <input type="hidden" class="quantity" value="1" name="quantity" id="Quantity-{{ acqua_product.id }}" data-Quantity>
+                  {%- endcapture -%}
+
+          {% comment %}
+            Collection of variant options
+          {% endcomment %}
+
+          {% unless acqua_product.has_only_default_variant %}
+            <div class="selection-wrapper variant js">
+              <div class="variant-grid">
+                {% for option in acqua_product.options_with_values %}
+                  {% assign index = forloop.index %}
+                  <div class="selector-wrapper">
+                    <label for="SingleOptionSelector-{{ forloop.index0 }}">
+                      {{ option.name }}
+                    </label>
+
+                    <div class="variant-swatches">
+                      {% for value in option.values %}
+                        <div class="swatch-item acqua-tooltip" data-direction="top">
+                          <input
+                            class="acqua-single-option-selector acqua-single-option-selector-{{ acqua_product.id }}"
+                            id="p-variant-{{ acqua_product.id }}-{{ index }}-{{ forloop.index0 }}"
+                            type="radio"
+                            name="{{ option.name }}"
+                            data-name="{{ option.name }}"
+                            data-index="option{{ index }}"
+                            value="{{ value | escape }}"
+                          >
+                          <label
+                            class="tooltip_initiator"
+                            for="p-variant-{{ acqua_product.id }}-{{ index }}-{{ forloop.index0 }}"
+                          >
+                            {% if option.name == 'Color' %}
+                              <img src="{{ value | downcase | escape | append:'.jpg' | strip | replace: " ", "-" | asset_url }}">
+                            {% else %}
+                              {{ value }}
+                            {% endif %}
+                          </label>
+                          {% if option.name == 'Color' %}
+                            <div class="tooltip_data">
+                              {{ value }}
+                            </div>
+                          {% endif %}
+                        </div>
+                      {% endfor %}
+                    </div>
+                  </div>
+                {% endfor %}
+
+                {% if section.settings.product_quantity_enable %}
+                  {{ quantity_selector }}
+                {% endif %}
+              </div>
+            </div>
+          {% else %}
+            {% if section.settings.product_quantity_enable %}
+              <div class="selection-wrapper variant js">
+                {{ quantity_selector }}
+              </div>
+            {% else %}
+              {%- assign cart_buttons_margin = 'cart_buttons__margin' -%}
+            {% endif %}
+          {% endunless %}
+
+          {% comment %}
+            Primary variant select controlled JS
+          {% endcomment %}
+
+          <div class="selection-wrapper variant no-js">
+            <div class="selector-wrapper full-width">
+              <select
+                name="id"
+                id="ProductSelect-{{ acqua_product.id }}"
+                data-section="{{ acqua_product.id }}"
+                class="product-form__variants no-js"
+              >
+                {% for variant in acqua_product.variants %}
+                  {% if variant.available %}
+                    <option
+                      {% if variant == acqua_product.selected_or_first_available_variant %}
+                        selected="selected"
+                      {% endif %}
+                      value="{{ variant.id }}"
+                      data-sku="{{ variant.sku }}"
+                    >
+                      {{ variant.title }} - {{ variant.price | money_with_currency }}
+                    </option>
+                  {% else %}
+                    <option disabled="disabled">{{ variant.title }} - {{ 'products.product.sold_out' | t }}</option>
+                  {% endif %}
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+
+          <div class="error cart-error cart-error-{{ acqua_product.id }}" style="display:none;"></div>
+
+          <div
+            id="CartButtons-{{ acqua_product.id }}"
+            class="cart-buttons {% if cart_buttons_margin %}{{ cart_buttons_margin }}{% endif %} {% if section.settings.show_payment_button and current_variant.available %}cart-buttons__enabled{% elsif section_onboarding %}cart-buttons__enabled{% endif %}"
+          >
+            <div class="button-wrapper default-cart-button">
+              <button
+                type="button"
+                name="add"
+                id="AddToCart-{{ acqua_product.id }}"
+                data-AddToCart
+                data-TbType="{{tb_product_type}}"
+                class="acqua-add-to-cart default-cart-button__button {% unless current_variant.available or section_onboarding %}disabled{% endunless %}"
+                {% unless current_variant.available %}
+                  disabled
+                {% endunless %}
+              >
+                <span id="AddToCartText-{{ acqua_product.id }}" data-AddToCartText>
+                  {% unless current_variant.available or section_onboarding %}
+                    {% comment %}        {{ 'products.product.sold_out' | t }}     {% endcomment %}
+                    SOLD OUT
+                  {% else %}
+                    SELECT THE SIZE
+                  {% endunless %}
+                </span>
+              </button>
+
+              {% comment %}     <a href="#" class="wishlist-btn">Save for later</a>  {% endcomment %}
+            </div>
+          </div>
+        {% endform %}
+      </div>
+    </div>
+  </div>
+
+  {% unless product.empty? %}
+    <script type="application/json" id="ProductJson-{{ acqua_product.id }}">
+      {{ acqua_product | json }}
+    </script>
+  {% endunless %}
+</div>
+
+<script>
+  var update_data = acqua_product.images;
+   setInterval(function() {
+    // Load the content of the section using an AJAX call
+    // ...
+
+    // Update the content of the section with the new data
+    document.getElementById("dews").innerHTML = acqua_product.images;
+  }, 500);
+</script>

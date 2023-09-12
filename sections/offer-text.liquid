@@ -1,0 +1,239 @@
+<section class="offer-text-area">
+	<div class="offer-text-wrap">
+    <ul class="offer-ul">
+      <li class="text1 offer-li">
+      {% for block in section.blocks %}
+        <div class="offer-text-block">
+          <p>{{ block.settings.custom_text }}</p>
+        </div>
+      {% endfor %}
+      </li>
+      <li class="text2 offer-li">
+      {% for block in section.blocks %}
+        <div class="offer-text-block">
+          <p>{{ block.settings.custom_text }}</p>
+        </div>
+      {% endfor %}
+      </li>
+    </ul>
+	</div>
+</section>
+
+{% schema %}
+{
+  "name": "Offer Text",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Top Bottom Padding"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 15,
+      "step": 1,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 15,
+      "step": 1,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "header",
+      "content": "Section Background Color"
+    },
+    {
+      "type": "checkbox",
+      "id": "section_bg_color_enable",
+      "label": "Show Background Color",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "section_bg_color",
+      "label": "Background Color",
+      "default": "#2f466c"
+    },
+    {
+      "type": "color",
+      "id": "section_text_color",
+      "label": "Text Color",
+      "default": "#ffffff"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "offer_text",
+      "name": "Offer Text",
+      "settings": [
+        {
+          "type": "text",
+          "id": "custom_text",
+          "label": "Custom text",
+          "default": "Grocery items only freshly"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Offer Text",
+      "category": "Offer Text"
+    }
+  ]
+}
+{% endschema %}
+<style type="text/css">
+.offer-text-area {
+	padding-top: {{ section.settings.section_padding_top }}px;
+	padding-bottom: {{ section.settings.section_padding_bottom }}px;
+	{% if section.settings.section_bg_color_enable %}
+	background-color: {{ section.settings.section_bg_color }};
+	{% endif %}
+}
+.offer-text-area .offer-text-wrap {
+  overflow: hidden;
+}
+.offer-text-area .offer-text-wrap ul.offer-ul {
+  display: flex;
+  align-items: center;
+}
+.offer-text-area .offer-text-wrap ul.offer-ul li.offer-li {
+  display: flex;
+}
+.offer-text-area .offer-text-wrap ul.offer-ul li.text1 {
+  -webkit-animation: slide1 50s linear infinite;
+  animation: slide1 50s linear infinite;
+  -webkit-animation-delay: -50s;
+  animation-delay: -50s;
+}
+.offer-text-area .offer-text-wrap ul.offer-ul li.text2 {
+  -webkit-animation: slide2 50s linear infinite;
+  animation: slide2 50s linear infinite;
+  -webkit-animation-delay: -25s;
+  animation-delay: -25s;
+}
+.offer-text-area .offer-text-wrap:hover ul.offer-ul li.offer-li,
+.offer-text-area .offer-text-wrap:focus-within ul.offer-ul li.offer-li {
+  -webkit-animation-play-state: paused;
+  -moz-animation-play-state: paused;
+  -o-animation-play-state: paused;
+  animation-play-state: paused;
+}
+@-webkit-keyframes slide1{
+  0%{
+    {%- if settings.enable_rtl -%}
+    transform: translateX(-100%);
+    {%- else -%}
+    transform: translateX(100%);
+    {%- endif -%}
+  } 100%{
+    {%- if settings.enable_rtl -%}
+    transform: translateX(100%);
+    {%- else -%}
+    transform: translateX(-100%);
+    {%- endif -%}
+  }
+}
+@-moz-keyframes slide1{
+  0%{
+    {%- if settings.enable_rtl -%}
+    transform: translateX(-100%);
+    {%- else -%}
+    transform: translateX(100%);
+    {%- endif -%}
+  } 100%{
+    {%- if settings.enable_rtl -%}
+    transform: translateX(100%);
+    {%- else -%}
+    transform: translateX(-100%);
+    {%- endif -%}
+  }
+}
+@keyframes slide1{
+  0%{
+    {%- if settings.enable_rtl -%}
+    transform: translateX(-100%);
+    {%- else -%}
+    transform: translateX(100%);
+    {%- endif -%}
+  } 100%{
+    {%- if settings.enable_rtl -%}
+    transform: translateX(100%);
+    {%- else -%}
+    transform: translateX(-100%);
+    {%- endif -%}
+  }
+}
+@-webkit-keyframes slide2{
+  0%{
+    {%- if settings.enable_rtl -%}
+    transform: translateX(0%);
+    {%- else -%}
+    transform: translateX(0%);
+    {%- endif -%}
+  } 100%{
+    {%- if settings.enable_rtl -%}
+    transform: translateX(200%);
+    {%- else -%}
+    transform: translateX(-200%);
+    {%- endif -%}            
+  }
+}
+@-moz-keyframes slide2{
+  0%{
+    {%- if settings.enable_rtl -%}
+    transform: translateX(0%);
+    {%- else -%}
+    transform: translateX(0%);
+    {%- endif -%}
+  } 100%{
+    {%- if settings.enable_rtl -%}
+    transform: translateX(200%);
+    {%- else -%}
+    transform: translateX(-200%);
+    {%- endif -%}            
+  }
+}
+@keyframes slide2{
+  0%{
+    {%- if settings.enable_rtl -%}
+    transform: translateX(0%);
+    {%- else -%}
+    transform: translateX(0%);
+    {%- endif -%}
+  } 100%{
+    {%- if settings.enable_rtl -%}
+    transform: translateX(200%);
+    {%- else -%}
+    transform: translateX(-200%);
+    {%- endif -%}            
+  }
+}
+.offer-text-area .offer-text-wrap ul.offer-ul li.offer-li .offer-text-block {
+  display: block;
+  white-space: nowrap;
+  position: relative;
+  {%- if settings.enable_rtl -%}
+  margin: 0px 50px 0px 0px;
+  {%- else -%}
+  margin: 0px 0px 0px 50px;
+  {%- endif -%}
+  font-weight: var(--sti-font-weight);
+  line-height: 1;
+  display: flex;
+  align-items: center;
+}
+.offer-text-area .offer-text-wrap ul.offer-ul li.offer-li .offer-text-block p {
+  color: {{ section.settings.section_text_color }};
+}
+</style>

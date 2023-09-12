@@ -1,0 +1,733 @@
+<section class="product-tab-ptb product-area-{{ section.id }}">
+  <div class="product-tab-area">
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <div class="section-capture">
+            {% if section.settings.section_title != '' %}
+              <div class="section-title">
+                <h2>{{ section.settings.section_title }}</h2>
+              </div>
+            {% endif %}
+          </div>
+          <div class="product-tab">
+            <ul class="nav nav-tabs" role="tablist">
+              {% for block in section.blocks %}
+                {% case block.type %}
+                  {% when 'product_tab' %}
+                    {% assign category_product = collections[block.settings.tab_product] %}
+                    <li role="presentation">
+                      <a
+                        class="{% if forloop.first == true %}active show{% endif %}"
+                        role="tab"
+                        data-bs-toggle="tab"
+                        href="#tab-{{ block.id }}"
+                      >
+                        <span>{{ category_product.title }}</span>
+                      </a>
+                    </li>
+                {% endcase %}
+              {% endfor %}
+            </ul>
+          </div>
+          <div class="tab-content tabs">
+            {% for block in section.blocks %}
+              {% case block.type %}
+                {% when 'product_tab' %}
+                  <div
+                    class="tab-pane fade{% if forloop.first == true %} active show{% endif %}"
+                    id="tab-{{ block.id }}"
+                    role="tabpanel"
+                  >
+                    <div class="feture-tab-wrap">
+                      <button class="swiper-button swiper-prev swiper-prev-{{ section.id }}">
+                        <i class="feather-arrow-left-circle"></i>
+                      </button>
+                      <button class="swiper-button swiper-next swiper-next-{{ section.id }}">
+                        <i class="feather-arrow-right-circle"></i>
+                      </button>
+
+                      <div class="swiper feture_pro_tab" id="feature-{{ block.id }}">
+                        <div class="swiper-wrapper">
+                          {% assign feature_product_limit = section.settings.featured_product_limit_handle %}
+                          {% for product in collections[block.settings.tab_product].products
+                            limit: feature_product_limit
+                          %}
+                            <div class="swiper-slide">
+                              {%- liquid
+                                if section.settings.pro_tab_product_view == 'grid'
+                                  render 'product-grid-item', product: product
+                                elsif section.settings.pro_tab_product_view == 'list'
+                                  render 'product-grid-list', product: product
+                                endif
+                              -%}
+                            </div>
+                          {% endfor %}
+                        </div>
+                        {% if section.settings.pro_tab_button_enable %}
+                          {% assign category_product = collections[block.settings.tab_product] %}
+                          <div class="tab-collection">
+                            <a
+                              href="{{ category_product.url }}"
+                              class="btn {% if section.settings.pro_tab_button_style == 'btn-style1' %}btn-style{% elsif section.settings.pro_tab_button_style == 'btn-style2' %}btn-style2{% else %}btn-style3{% endif %}"
+                            >
+                              {{- section.settings.pro_tab_button_text -}}
+                            </a>
+                          </div>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                  <script type="text/javascript">
+                    addEventListener('DOMContentLoaded', (event) => {
+                      var swiper = new Swiper('.swiper#feature-{{ block.id }}', {
+                        slidesPerView: 5.5,
+                        grid: {
+                          rows: {{ section.settings.product_col }},
+                          fill: 'row' | 'column',
+                        },
+                        spaceBetween: 30,
+                        observer: true,
+                        observeParents: true,
+                        watchSlidesProgress: true,
+                        {%- if settings.enable_rtl -%}
+                        rtl: true,
+                        {%- endif -%}
+                        navigation: {
+                          nextEl: '.swiper-next-{{ section.id }}',
+                          prevEl: '.swiper-prev-{{ section.id }}',
+                        },
+                        pagination: {
+                          el: ".swiper-pagination-{{ section.id }}",
+                          clickable: true
+                        },
+                        {% comment %} autoplay: {
+                          delay: 5000,
+                          disableOnInteraction: false,
+                          pauseOnMouseEnter: true
+                        }, {% endcomment %}
+                        breakpoints: {
+                          0: {
+                            slidesPerView: 1.2,
+                            grid: {
+                              rows: {{ section.settings.product_col }},
+                              fill: 'row' | 'column',
+                            },
+                            spaceBetween: 12
+                          },
+                          320: {
+                            slidesPerView: 1.2,
+                            grid: {
+                              rows: {{ section.settings.product_col }},
+                              fill: 'row' | 'column',
+                            },
+                            spaceBetween: 12
+                          },
+                          360: {
+                            {% if section.settings.pro_tab_product_view == 'list' %}
+                            slidesPerView: 1.2,
+                            {% elsif section.settings.pro_tab_product_view == 'grid' %}
+                            slidesPerView: 1.2,
+                            {% endif %}
+                            grid: {
+                              rows: {{ section.settings.product_col }},
+                              fill: 'row' | 'column',
+                            },
+                            spaceBetween: 12
+                          },
+                          540: {
+                            slidesPerView: 1.2,
+                            grid: {
+                              rows: {{ section.settings.product_col }},
+                              fill: 'row' | 'column',
+                            },
+                            spaceBetween: 12
+                          },
+                          640: {
+                            slidesPerView: 2.5,
+                            grid: {
+                              rows: {{ section.settings.product_col }},
+                              fill: 'row' | 'column',
+                            },
+                            spaceBetween: 12
+                          },
+                          768: {
+                            slidesPerView: 3.5,
+                            navigation: {
+                              disabledClass: 'disabled_swiper_button'
+                            },
+                            grid: {
+                              rows: {{ section.settings.product_col }},
+                              fill: 'row' | 'column',
+                            },
+                            spaceBetween: 30
+                          },
+                          1024: {
+                            slidesPerView: 3.5,
+                            grid: {
+                              rows: {{ section.settings.product_col }},
+                              fill: 'row' | 'column',
+                            },
+                            spaceBetween: 30
+                          },
+                          1199: {
+                            slidesPerView: 5.5,
+                            grid: {
+                              rows: {{ section.settings.product_col }},
+                              fill: 'row' | 'column',
+                            },
+                            spaceBetween: 30
+                          }
+                        }
+                      });
+                    });
+                  </script>
+              {% endcase %}
+            {% endfor %}
+          </div>
+          <div class="swiper-buttons mobile">
+            <button class="swiper-prev swiper-prev-{{ section.id }}"><i class="feather-arrow-left"></i></button>
+            <button class="swiper-next swiper-next-{{ section.id }}"><i class="feather-arrow-right"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Swiper Tab Slider",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Padding"
+    },
+    {
+      "type": "paragraph",
+      "content": "Desktop / Laptop"
+    },
+    {
+      "type": "range",
+      "id": "pro_tab_padding_top",
+      "label": "Section Padding Top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "pro_tab_padding_bottom",
+      "label": "Section Padding Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "paragraph",
+      "content": "Ipad pro / Ipad"
+    },
+    {
+      "type": "range",
+      "id": "pro_tab_padding_top_ip",
+      "label": "Section Padding Top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "pro_tab_padding_bottom_ip",
+      "label": "Section Padding Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "paragraph",
+      "content": "Mobile"
+    },
+    {
+      "type": "range",
+      "id": "pro_tab_padding_top_xs",
+      "label": "Section Padding Top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "pro_tab_padding_bottom_xs",
+      "label": "Section Padding Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Section Background Color"
+    },
+    {
+      "type": "color",
+      "id": "pro_tab_bgcolor",
+      "label": "Background Color",
+      "default": "#fcf8f8"
+    },
+    {
+      "type": "checkbox",
+      "id": "pro_tab_bgcolor_enable",
+      "label": "Show Background Color",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Section title"
+    },
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Section Title",
+      "default": "Feature product"
+    },
+    {
+      "type": "header",
+      "content": "Section Border"
+    },
+    {
+      "type": "range",
+      "id": "border",
+      "label": "Border",
+      "min": 0,
+      "max": 2,
+      "step": 1,
+      "unit": "px",
+      "default": 1
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "#C19D60"
+    },
+    {
+      "type": "range",
+      "id": "border_color_opacity",
+      "label": "Theme Border Color Opacity",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "default": 0.3
+    },
+    {
+      "type": "checkbox",
+      "id": "border_enable",
+      "label": "Show Section Border",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Product"
+    },
+    {
+      "type": "radio",
+      "id": "pro_tab_product_view",
+      "label": "Product View Option",
+      "options": [
+        {
+          "label": "Grid View",
+          "value": "grid"
+        },
+        {
+          "label": "List View",
+          "value": "list"
+        }
+      ],
+      "default": "grid"
+    },
+    {
+      "type": "text",
+      "id": "featured_product_limit_handle",
+      "label": "Product Limit",
+      "default": "12"
+    },
+    {
+      "type": "select",
+      "id": "product_col",
+      "label": "slides Per Column",
+      "options": [
+        {
+          "label": "1 Products",
+          "value": "1"
+        },
+        {
+          "label": "2 Products",
+          "value": "2"
+        },
+        {
+          "label": "3 Products",
+          "value": "3"
+        }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "select",
+      "id": "slide_product_limit",
+      "label": "slides Per View",
+      "options": [
+        {
+          "label": "3 Products",
+          "value": "3"
+        },
+        {
+          "label": "4 Products",
+          "value": "4"
+        },
+        {
+          "label": "5 Products",
+          "value": "5"
+        },
+        {
+          "label": "6 Products",
+          "value": "6"
+        }
+      ],
+      "default": "4"
+    },
+    {
+      "type": "header",
+      "content": "Button Style"
+    },
+    {
+      "type": "text",
+      "id": "pro_tab_button_text",
+      "label": "Button Text",
+      "default": "See more"
+    },
+    {
+      "type": "select",
+      "id": "pro_tab_button_style",
+      "label": "Button Style",
+      "options": [
+        {
+          "label": "Button Style1",
+          "value": "btn-style1"
+        },
+        {
+          "label": "Button Style2",
+          "value": "btn-style2"
+        },
+        {
+          "label": "Button Style3",
+          "value": "btn-style3"
+        }
+      ],
+      "default": "btn-style2"
+    },
+    {
+      "type": "checkbox",
+      "id": "pro_tab_button_enable",
+      "label": "Show Collection Button",
+      "default": false
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product_tab",
+      "name": "Trending products",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "tab_product",
+          "label": "Tab With Product"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Swiper Tab Slider"
+    }
+  ]
+}
+{% endschema %}
+<style>
+   .product-area-{{ section.id }} {
+     padding-top: {{ section.settings.pro_tab_padding_top }}px;
+     padding-bottom: {{ section.settings.pro_tab_padding_bottom }}px;
+     {% if section.settings.pro_tab_bgcolor_enable %}
+     background-color: {{ section.settings.pro_tab_bgcolor }};
+     {% endif %}
+     {% if section.settings.border_enable %}
+     border-top: {{ section.settings.border }}px solid {{ section.settings.border_color | color_modify: 'alpha', section.settings.border_color_opacity }};
+     {% endif %}
+   }
+   @media (max-width: 1199px) {
+     .product-area-{{ section.id }} {
+       padding-top: {{ section.settings.pro_tab_padding_top_ip }}px;
+       padding-bottom: {{ section.settings.pro_tab_padding_bottom_ip }}px;
+     }
+   }
+   @media (max-width: 767px) {
+     .product-area-{{ section.id }} {
+       padding-top: {{ section.settings.pro_tab_padding_top_xs }}px;
+       padding-bottom: {{ section.settings.pro_tab_padding_bottom_xs }}px;
+     }
+   }
+
+
+   /* tab css */
+   .product-tab-ptb .product-tab {
+     margin-bottom: 50px;
+   }
+   .product-tab-ptb .product-tab ul.nav-tabs {
+     display: flex;
+     align-items: center;
+     border: none;
+     margin: -13px 0 0 -30px;
+     justify-content: center;
+   }
+   .product-tab-ptb .product-tab ul.nav-tabs li {
+     margin: 13px 0 0 30px;
+   }
+   .product-tab-ptb .product-tab ul.nav-tabs li a {
+     position: relative;
+     font-size: 20px;
+     color: var(--font-color-paragraph);
+     font-weight: 200;
+     text-transform: uppercase;
+   }
+   .product-tab-ptb .product-tab ul.nav-tabs li a:hover,
+   .product-tab-ptb .product-tab ul.nav-tabs li a.active {
+     color: var(--font-color-primary);
+   }
+   .product-tab-ptb .product-tab ul.nav-tabs li a::before {
+     background-color: var(--font-color-primary);
+     content: '';
+     position: absolute;
+     right: 0;
+     bottom: -2px;
+     left: 0px;
+     width: 0px;
+     height: 1px;
+     margin: 0 auto;
+     opacity: 0;
+     visibility: hidden;
+     -webkit-transition: opacity .3s ease-in-out, visibility .3s ease-in-out, width .3s ease-in-out;
+     -o-transition: opacity .3s ease-in-out, visibility .3s ease-in-out, width .3s ease-in-out;
+     transition: opacity .3s ease-in-out, visibility .3s ease-in-out, width .3s ease-in-out;
+   }
+   .product-tab-ptb .product-tab ul.nav-tabs li a.active::before,
+   .product-tab-ptb .product-tab ul.nav-tabs li a:hover::before {
+     width: 100%;
+     opacity: 1;
+     visibility: visible;
+   }
+   @media (max-width: 1199px) {
+     .product-tab-ptb .product-tab {
+       margin-bottom: 40px;
+     }
+   }
+   @media (max-width: 767px) {
+     .product-tab-ptb .product-tab {
+       margin-bottom: 30px;
+     }
+     .product-tab-ptb .product-tab ul.nav-tabs {
+       margin: -13px 0 0 -15px;
+     }
+     .product-tab-ptb .product-tab ul.nav-tabs li {
+       margin: 13px 0 0 15px;
+     }
+   }
+   @media (max-width: 479px) {
+     .product-tab-ptb .product-tab ul.nav-tabs {
+       justify-content: center;
+     }
+   }
+
+   /* section title css */
+   .product-tab-ptb .product-tab-area .section-capture {
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+   }
+
+   .feture-tab-wrap {
+   display:flex;
+   align-items: center;
+   }
+
+
+   .feture-tab-wrap .swiper-slide  {
+
+   }
+
+
+   .product-tab-ptb .product-tab-area .tab-content .swiper-button {
+     position: absolute;
+     z-index: 3;
+     font-size: 30px;
+     transform: translateY(-200%);
+   }
+
+     .product-tab-ptb .product-tab-area .tab-content .swiper-button.disabled_swiper_button {
+     z-index: -1;
+     opacity:0;
+     cursor: auto;
+     pointer-events: none;
+     }
+
+   .product-tab-ptb .product-tab-area .tab-content .swiper-button.swiper-button-disabled {
+   background: transparent !important;
+   opacity:0;
+   }
+
+    .product-tab-ptb .product-tab-area .tab-content .swiper-button.swiper-prev {
+      left:10px;
+    }
+   .product-tab-ptb .product-tab-area .tab-content .swiper-button.swiper-next {
+      right:10px;
+    }
+
+       @media (max-width: 800px) {
+  .product-tab-ptb .product-tab-area .tab-content .swiper-button {
+  display: none;
+  }
+   }
+   @media (max-width: 479px) {
+     .product-tab-ptb .product-tab-area .section-capture {
+       flex-direction: column;
+     }
+     .product-tab-ptb .product-tab-area .section-capture .swiper-buttons {
+       display: none;
+     }
+   }
+
+   /* tab swiper margin css */
+   {% if section.settings.pro_tab_product_view == 'grid' %}
+
+   .product-area-{{ section.id }} .tabs .feture-tab-wrap .feture_pro_tab.swiper {
+     margin-top: -20px;
+   }
+
+   .feture_pro_tab:after {
+     content: '';
+     position: absolute;
+     right: 0;
+     top: 0;
+     z-index: 3;
+     height: 100%;
+     width: 194px;
+     background: rgb(255,255,255);
+     background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
+   }
+   .product-area-{{ section.id }} .tabs .feture-tab-wrap .feture_pro_tab.swiper .swiper-wrapper .swiper-slide .single-product-wrap {
+     margin-top: 20px;
+   }
+   @media (max-width: 1199px) {
+     .product-area-{{ section.id }} .tabs .feture-tab-wrap .feture_pro_tab.swiper {
+       margin-top: -10px;
+     }
+     .product-area-{{ section.id }} .tabs .feture-tab-wrap .feture_pro_tab.swiper .swiper-wrapper .swiper-slide .single-product-wrap {
+       margin-top: 10px;
+     }
+   }
+   @media (max-width: 767px) {
+     .product-area-{{ section.id }} .tabs .feture-tab-wrap .feture_pro_tab.swiper {
+       margin-top: -18px;
+     }
+     .product-area-{{ section.id }} .tabs .feture-tab-wrap .feture_pro_tab.swiper .swiper-wrapper .swiper-slide .single-product-wrap {
+       margin-top: 18px;
+     }
+
+       .feture_pro_tab:after {
+         display:none;
+       }
+   }
+   {% endif %}
+
+   {% if section.settings.pro_tab_button_enable %}
+   /* view button collection css */
+   .product-area-{{ section.id }} .tabs .feture-tab-wrap .tab-collection {
+     margin-top: 100px;
+     text-align: center;
+   }
+   @media (max-width: 1199px) {
+     .product-area-{{ section.id }} .tabs .feture-tab-wrap .tab-collection {
+       margin-top: 80px;
+     }
+   }
+   @media (max-width: 767px) {
+     .product-area-{{ section.id }} .tabs .feture-tab-wrap .tab-collection {
+       margin-top: 60px;
+     }
+   }
+   {% endif %}
+
+   /* slider dot css */
+   .product-area-{{ section.id }} .tabs .feture-tab-wrap .swiper-dots {
+     display: none;
+     margin-top: 100px;
+     line-height: 0;
+   }
+   .product-area-{{ section.id }} .tabs .feture-tab-wrap .swiper-dots .swiper-pagination.swiper-pagination-bullets {
+     width: unset;
+     position: unset;
+     display: flex;
+     flex-wrap: wrap;
+     justify-content: center;
+     {% if settings.enable_rtl %}
+     margin: -5px -5px 0px 0px;
+     {% else %}
+     margin: -5px 0px 0px -5px;
+     {% endif %}
+   }
+   .product-area-{{ section.id }} .tabs .feture-tab-wrap .swiper-dots .swiper-pagination.swiper-pagination-bullets span {
+     width: 10px;
+     height: 10px;
+     {% if settings.enable_rtl %}
+     margin: 5px 5px 0px 0px;
+     {% else %}
+     margin: 5px 0px 0px 5px;
+     {% endif %}
+     background-color: transparent;
+     border: 1px solid var(--font-color-header);
+     border-radius: 100%;
+     opacity: 1;
+   }
+   .product-area-{{ section.id }} .tabs .feture-tab-wrap .swiper-dots .swiper-pagination.swiper-pagination-bullets span.swiper-pagination-bullet-active {
+     background-color: var(--font-color-header);
+     border: 1px solid var(--font-color-header);
+   }
+   @media (max-width: 1199px) {
+     .product-area-{{ section.id }} .tabs .feture-tab-wrap .swiper-dots {
+       margin-top: 80px;
+     }
+   }
+   @media (max-width: 767px) {
+     .product-area-{{ section.id }} .tabs .feture-tab-wrap .swiper-dots {
+       margin-top: 60px;
+     }
+   }
+
+   /* swiper slider mobile button css */
+   .product-tab-ptb .product-tab-area .swiper-buttons.mobile {
+     display: none;
+   }
+   @media (max-width: 479px) {
+     .product-tab-ptb .product-tab-area .swiper-buttons.mobile {
+       display: none;
+     }
+   }
+</style>

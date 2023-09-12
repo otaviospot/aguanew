@@ -1,0 +1,314 @@
+<!-- header-area start -->
+<section class="header-kaj">
+    <div class="header-area">
+      <div class="header-main-area">
+        <div class="container">
+          <div class="header-main">
+              <div class="header-element logo-wrap">
+                {%- render 'company-logo' -%}
+              </div>
+              <div class="header-element search-wrap">
+                {%- render 'search-bar', section: section -%}
+              </div>
+              <div class="header-element right-block">
+                {%- render 'header-icon', section: section -%}
+              </div>
+          </div>
+        </div>
+      </div>
+      <div class="header-bottom-wrap">
+        <div class="container">
+          <div class="menu-rightblock">
+            <div class="megamenu-block">
+              <nav class="main-navigation">
+                <div class="megamenu-content">
+                  <ul class="main-menu">
+                    {% assign header_main_menu = section.settings.header_main_menu %}
+                    {% for link in linklists[header_main_menu].links %}
+                    {% if linklists[header_main_menu].links != '' %}
+                    {% render 'main-menu', link: link %}
+                    {% endif %}
+                    {% endfor %}
+                  </ul>
+                </div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mobile-menu">
+      <div class="main-menu-area">
+        <nav class="main-navigation">
+            <div class="box-header">
+                <button class="close-box" type="button"><i class="ri-close-line"></i></button>
+            </div>
+            <div class='header-offer-text'>
+              {% if section.settings.offer_text_1 != '' %}
+              <span class="text-1">{{ section.settings.offer_text_1 }}</span>
+              {% endif %}
+              {% if section.settings.offer_text_2 != '' %}
+              <span class="text-2">{{ section.settings.offer_text_2 }}</span>
+              {% endif %}
+            </div>
+            <div class="megamenu-content">
+              <ul class="main-menu">
+                  {%- liquid
+                  assign header_main_menu = section.settings.header_main_menu
+                  for link in linklists[header_main_menu].links
+                  if linklists[header_main_menu].links != ''
+                  render 'main-menu', link: link
+                  endif
+                  endfor
+                  -%}
+              </ul>
+            </div>
+        </nav>
+        <div class="custom-info-block">
+          <div class="custom-info-item">
+            {% if section.settings.info_1_icon != '' %}
+            <div class="info-icon">
+              <span class="icon"><i class="{{ section.settings.info_1_icon }}"></i></span>
+            </div>
+            {% endif %}
+            <div class="info-content">
+              {% if section.settings.info_1_label != '' %}
+              <span class="label">{{ section.settings.info_1_label }}</span>
+              {% endif %}
+              {% if section.settings.info_1_text != '' %}
+              {{ section.settings.info_1_text }}
+              {% endif %}
+            </div>
+          </div>
+          <div class="custom-info-item">
+            {% if section.settings.info_2_icon != '' %}
+            <div class="info-icon">
+              <span class="icon"><i class="{{ section.settings.info_2_icon }}"></i></span>
+            </div>
+            {% endif %}
+            <div class="info-content">
+              {% if section.settings.info_2_label != '' %}
+              <span class="label">{{ section.settings.info_2_label }}</span>
+              {% endif %}
+              {% if section.settings.info_2_text != '' %}
+              {{ section.settings.info_2_text }}
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</section>
+{%- render 'search-popup-modal' -%}
+{% render 'mini-cart-drawer' %}
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Logo Notice"
+    },
+    {
+      "type": "paragraph",
+      "content": "For logo go to 'Theme Settings' click on 'Company Logo' & set both Header-Footer Logo"
+    },
+    {
+      "type": "header",
+      "content": "Header Sticky Option"
+    },
+    {
+      "type": "checkbox",
+      "id": "header_sticky_enable",
+      "label": "Show Header Sticky",
+      "default": true
+    },
+    {
+      "type": "paragraph",
+      "content": "This option available only for 'index', 'collection' & 'product' template respectively"
+    },
+    {
+      "type": "header",
+      "content": "Header Top"
+    },
+    {
+      "type": "header",
+      "content": "Header Top Background Color"
+    },
+    {
+      "type": "color",
+      "id": "header_top_bg_color",
+      "label": "Background Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "Custom Information"
+    },
+    {
+      "type": "header",
+      "content": "Information 1"
+    },
+    {
+      "type": "text",
+      "id": "info_1_icon",
+      "label": "Info Icon Class",
+      "default": "feather-headphones"
+    },
+    {
+      "type": "text",
+      "id": "info_1_label",
+      "label": "Info Label",
+      "default": "Contact"
+    },
+    {
+      "type": "richtext",
+      "id": "info_1_text",
+      "label": "Info Label"
+    },
+    {
+      "type": "header",
+      "content": "Information 2"
+    },
+    {
+      "type": "text",
+      "id": "info_2_icon",
+      "label": "Info Icon Class",
+      "default": "feather-clock"
+    },
+    {
+      "type": "text",
+      "id": "info_2_label",
+      "label": "Info Label",
+      "default": "Mon-fri"
+    },
+    {
+      "type": "richtext",
+      "id": "info_2_text",
+      "label": "Info Label"
+    },
+    {
+      "type": "header",
+      "content": "Header Bottom"
+    },
+    {
+      "type": "header",
+      "content": "Header Bottom Background Color"
+    },
+    {
+      "type": "color",
+      "id": "header_bottom_bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Header Top Border"
+    },
+    {
+      "type": "checkbox",
+      "id": "border_enable",
+      "label": "Show Section Border",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "border",
+      "label": "Border",
+      "min": 0,
+      "max": 2,
+      "step": 1,
+      "unit": "px",
+      "default": 1
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "#808080"
+    },
+    {
+      "type": "range",
+      "id": "border_color_opacity",
+      "label": "Theme Border Color Opacity",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "default": 0.1
+    },
+    {
+      "type": "header",
+      "content": "Main Menu"
+    },
+    {
+      "type": "link_list",
+      "id": "header_main_menu",
+      "label": "Select mainmenu"
+    },
+    {
+      "type": "header",
+      "content": "Offer Text"
+    },
+    {
+      "type": "text",
+      "id": "offer_text_1",
+      "label": "Text 1",
+      "default": "Free shipping on orders"
+    },
+    {
+      "type": "text",
+      "id": "offer_text_2",
+      "label": "Text 2",
+      "default": "$99"
+    }
+  ]
+}
+{% endschema %}
+
+<style>
+{% if section.settings.header_sticky_enable %}
+{% if template == 'index' or template == 'collection' or template == 'product' %}
+/* sticky menu css */
+.is-sticky{
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.15);
+}
+.header-bottom-wrap.is-sticky{
+  animation: smoothScroll 1s forwards;
+  border-bottom: none;
+}
+@keyframes smoothScroll {
+  0% {
+    transform: translateY(-200px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+{% endif %}
+{% endif %}
+
+/* header border css */
+{% if template == "product" %}
+.header-kaj {
+  border-bottom: {{ section.settings.border }}px solid {{ section.settings.border_color | color_modify: 'alpha', section.settings.border_color_opacity }};
+}
+{% endif %}
+
+/* header top css */
+.header-area .header-main-area {
+  background-color: {{ section.settings.header_top_bg_color }};
+}
+
+/* header bottom css */
+.header-area .header-bottom-wrap {
+  background-color: {{ section.settings.header_bottom_bg_color }};
+  {% if section.settings.border_enable %}
+  border-top: {{ section.settings.border }}px solid {{ section.settings.border_color | color_modify: 'alpha', section.settings.border_color_opacity }};
+  {% endif %}
+}
+</style>
